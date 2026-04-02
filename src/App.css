@@ -1,0 +1,243 @@
+:root {
+  --ink: #101a27;
+  --muted: #48596f;
+  --line: #d6dde7;
+  --paper: #f8fafc;
+  --panel: #ffffff;
+  --accent: #0f766e;
+  --accent-2: #b45309;
+  --heading: 'Avenir Next', 'Futura', 'Trebuchet MS', sans-serif;
+  --body: 'Optima', 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.site-shell {
+  position: relative;
+  overflow: hidden;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+  color: var(--ink);
+}
+
+.ambient {
+  position: absolute;
+  z-index: -1;
+  border-radius: 999px;
+  filter: blur(2px);
+  opacity: 0.8;
+}
+
+.ambient-left {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.22), rgba(15, 118, 110, 0));
+  top: -110px;
+  left: -120px;
+}
+
+.ambient-right {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, rgba(180, 83, 9, 0.2), rgba(180, 83, 9, 0));
+  right: -180px;
+  top: 120px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 56px;
+}
+
+.brand {
+  margin: 0;
+  font: 700 1rem/1 var(--heading);
+  letter-spacing: 0.18em;
+}
+
+.topbar a {
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font: 600 0.9rem/1 var(--body);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.topbar a:hover {
+  transform: translateY(-1px);
+  border-color: var(--ink);
+}
+
+.topbar-note {
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font: 600 0.9rem/1 var(--body);
+}
+
+.hero {
+  max-width: 820px;
+  margin-bottom: 48px;
+  animation: rise-in 650ms ease both;
+}
+
+.kicker {
+  text-transform: uppercase;
+  font: 700 0.8rem/1.2 var(--body);
+  letter-spacing: 0.14em;
+  color: var(--accent-2);
+  margin-bottom: 14px;
+}
+
+h1 {
+  margin: 0;
+  font: 800 clamp(2rem, 6.2vw, 4rem) / 0.98 var(--heading);
+  letter-spacing: -0.03em;
+}
+
+.hero-copy {
+  margin-top: 20px;
+  font: 500 1.08rem/1.72 var(--body);
+  color: var(--muted);
+  max-width: 66ch;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: 700 0.92rem/1 var(--body);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-primary {
+  background: linear-gradient(120deg, var(--accent), #16a394);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.24);
+}
+
+.button-ghost {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+}
+
+.grid-section,
+.split-section,
+.founder,
+.cta {
+  margin-top: 20px;
+  animation: rise-in 750ms ease both;
+}
+
+h2 {
+  font: 700 clamp(1.55rem, 3.5vw, 2rem) / 1.1 var(--heading);
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+}
+
+h3 {
+  margin: 0 0 10px;
+  font: 700 1.2rem/1.2 var(--heading);
+}
+
+p {
+  margin: 0;
+  font: 500 1rem/1.65 var(--body);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card,
+.panel,
+.founder,
+.cta {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.78));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 22px;
+  backdrop-filter: blur(3px);
+}
+
+.card p,
+.panel p,
+.founder p,
+.cta p {
+  color: var(--muted);
+}
+
+.split-section {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1.4fr 1fr;
+}
+
+.panel-accent {
+  border-color: rgba(180, 83, 9, 0.4);
+}
+
+.panel ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.panel li {
+  margin: 8px 0;
+  font: 600 0.98rem/1.5 var(--body);
+  color: var(--ink);
+}
+
+.cta {
+  margin-top: 14px;
+}
+
+@media (max-width: 940px) {
+
+  .card-grid,
+  .split-section {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    margin-bottom: 42px;
+  }
+
+  .hero-copy {
+    font-size: 1rem;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
