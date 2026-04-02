@@ -6,13 +6,17 @@ on:
       - main
 
 env:
-  # ── Configure these to match your Google Cloud setup ──────────────────────
+  GCP_PROJECT_ID: softllc-home-page
+  GCP_PROJECT_NUMBER: "400671380418"
   GCP_REGION: us-central1
-  ARTIFACT_REGISTRY_REPO: homepage          # repo name in Artifact Registry
-  CLOUD_RUN_SERVICE: softllc-homepage       # Cloud Run service name
-  # ──────────────────────────────────────────────────────────────────────────
+  ARTIFACT_REGISTRY_REPO: homepage
+  CLOUD_RUN_SERVICE: softllc-homepage
+  IMAGE_NAME: softllc-homepage
+  GCP_WORKLOAD_IDENTITY_PROVIDER: projects/400671380418/locations/global/workloadIdentityPools/github/providers/homepage
+  GCP_SERVICE_ACCOUNT_EMAIL: github-actions-deployer@softllc-home-page.iam.gserviceaccount.com
 
-  IMAGE: ${{ vars.GCP_REGION || 'us-central1' }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO || 'homepage' }}/softllc-homepage
+  # Ensure this provider trusts repository principal:
+  # principalSet://iam.googleapis.com/projects/400671380418/locations/global/workloadIdentityPools/github/attribute.repository/mcnerthney/homepage
 
 jobs:
   deploy:
@@ -32,13 +36,13 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT_EMAIL }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
@@ -46,21 +50,21 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --tag "${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/softllc-homepage:${{ github.sha }}" \
-            --tag "${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/softllc-homepage:latest" \
+            --tag "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" \
+            --tag "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:latest" \
             .
 
       - name: Push image to Artifact Registry
         run: |
-          docker push "${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/softllc-homepage:${{ github.sha }}"
-          docker push "${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/softllc-homepage:latest"
+          docker push "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          docker push "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:latest"
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.CLOUD_RUN_SERVICE }}
           region: ${{ env.GCP_REGION }}
-          image: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/softllc-homepage:${{ github.sha }}"
+          image: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
           flags: >-
             --allow-unauthenticated
             --port=8080
