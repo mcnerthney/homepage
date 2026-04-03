@@ -25,7 +25,7 @@ function App() {
           consulting company, SaaS business, or AI venture, softllc.com gives you a credible and memorable digital home.
         </p>
         <div className="hero-actions">
-          <a className="button button-primary" href="mailto:hello@softllc.com">
+          <a className="button button-primary" href="mailto:dan@softllc.com">
             Make an offer
           </a>
           <a className="button button-ghost" href="#details">
