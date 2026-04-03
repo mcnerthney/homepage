@@ -109,6 +109,10 @@ gcloud iam service-accounts add-iam-policy-binding "${DEPLOYER_SA_EMAIL}" \
   --role="roles/iam.workloadIdentityUser" \
   --member="principalSet://iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/attribute.repository/${GITHUB_REPO}"
 
+gcloud iam service-accounts add-iam-policy-binding "${DEPLOYER_SA_EMAIL}" \
+  --role="roles/iam.serviceAccountTokenCreator" \
+  --member="principalSet://iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/attribute.repository/${GITHUB_REPO}"
+
 echo
 printf 'Workflow value: GCP_WORKLOAD_IDENTITY_PROVIDER=%s\n' "projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${PROVIDER_ID}"
 printf 'Workflow value: GCP_SERVICE_ACCOUNT_EMAIL=%s\n' "${DEPLOYER_SA_EMAIL}"
